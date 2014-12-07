@@ -1,6 +1,7 @@
 # media files
 *.mp3
 *.wav
+*.flac
 
 # test bench
 test.m
