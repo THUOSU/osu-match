@@ -1,3 +1,6 @@
 # media files
 *.mp3
 *.wav
+
+# test bench
+Console/Src/MATLAB/test.m
