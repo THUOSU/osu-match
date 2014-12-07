@@ -3,4 +3,4 @@
 *.wav
 
 # test bench
-Console/Src/MATLAB/test.m
+test.m
