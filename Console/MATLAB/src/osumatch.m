@@ -84,5 +84,10 @@ else
     audioMatch = audioHQ;
 end
 
-audiowrite(audioFileMatch,audioMatch,fs1);
+try
+    audiowrite(audioFileMatch,audioMatch,fs1);
+catch err
+    disp('Cannot Write File');
+    return;
+end
 
