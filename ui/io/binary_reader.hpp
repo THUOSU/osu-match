@@ -17,6 +17,7 @@
 #include <codecvt>
 #include <stdexcept>
 #include <type_traits>
+#include <tuple>
 
 namespace thuosu
 {
@@ -129,8 +130,8 @@ namespace thuosu
 
 		private:
 
-			template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value, void>>
-			struct ignorer
+			template <typename T>
+			struct ignorer : std::enable_if<std::is_arithmetic<T>::value, std::tuple<>>::type
 			{
 				inline static void ignore(binary_reader& reader) { reader.ignore(sizeof(T)); }
 			};
