@@ -5,6 +5,8 @@
 
 # test bench
 test.m
+
+# visual studio files
 *.sdf
 *.suo
 *.opensdf
