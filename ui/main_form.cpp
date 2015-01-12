@@ -38,7 +38,7 @@ using namespace nana;
 inline nana::listbox::oresolver & operator << (nana::listbox::oresolver & ore, const thuosu::map_info & info)
 {
 	auto bg_color = info.matched ? 0xaaffaa : 0xffffff;
-	for (const auto & str : { info.artist, info.title, info.full_path() })
+	for (const auto & str : { info.artist, info.title, wstring(info.full_path()) })
 		ore << nana::listbox::cell(str, bg_color, 0);
 	return ore;
 }
