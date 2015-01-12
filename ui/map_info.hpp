@@ -6,17 +6,20 @@
 #include <algorithm>
 #include <cwctype>
 
+#include "filesystem.hpp"
+
 namespace thuosu
 {
 	struct map_info
 	{
-		std::wstring artist, artist_romanized, title, title_romanized, location, music_file, source;
+		std::wstring artist, artist_romanized, title, title_romanized, source;
+		filesystem::path location, music_file;
 		std::vector<std::wstring> tags;
 		bool matched;
 
-		std::wstring full_path() const
+		filesystem::path full_path() const
 		{
-			return location + L'\\' + music_file;
+			return location / music_file;
 		}
 
 		bool match(const std::wstring & key) const
@@ -44,6 +47,16 @@ namespace thuosu
 	inline void get_tags(Reader & reader, map_info & info)
 	{
 		info.tags = split(reader.read<std::wstring>());
+	}
+	template <typename Reader>
+	inline void get_location(Reader & reader, map_info & info)
+	{
+		info.location = reader.read<std::wstring>();
+	}
+	template <typename Reader>
+	inline void get_music_file(Reader & reader, map_info & info)
+	{
+		info.music_file = reader.read<std::wstring>();
 	}
 }
 
