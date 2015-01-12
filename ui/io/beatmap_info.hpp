@@ -3,7 +3,6 @@
 * 
 * \brief beatmap information and general-purpose osu!.db reading
 *  
-* 
 */
 
 #ifndef THUOSU_BEATMAP_INFO_HPP
@@ -14,7 +13,7 @@
 #include <vector>
 #include "binary_reader.hpp"
 
-#include "type_trais.hpp"
+#include "type_traits.hpp"
 
 //!\brief default get member
 //! enabled if T has member of type '_type' named '_member'
@@ -161,7 +160,7 @@ namespace thuosu
 				(detail::has_artist<T, std::wstring>::value && detail::has_artist_romanized<T, std::wstring>::value)
 				|| (detail::has_artist<T, std::string>::value && detail::has_artist_romanized<T, std::string>::value),
 				void>::type
-				assign_artist(T & t) { if (t.artist.size() == 0) t.artist = t.artist_romanzied; }
+				assign_artist(T & t) { if (t.artist.size() == 0) t.artist = t.artist_romanized; }
 			template <typename T>
 			inline typename std::enable_if<
 				detail::has_artist<T, std::wstring>::value && detail::has_artist_romanized<T, std::string>::value,
@@ -231,32 +230,38 @@ namespace thuosu
 			reader.read<wstring>();
 			int beatmap_count = reader.read<int32_t>();
 			vector<InfoType> info_list{};
+#if (defined(DEBUG) || defined(_DEBUG)) && defined(THUOSU_BEATMAP_INFO_LIMIT)
+			static_assert(std::is_integral<decltype(THUOSU_BEATMAP_INFO_LIMIT)>::value && THUOSU_BEATMAP_INFO_LIMIT > 0,
+				"THUOSU_BEATMAP_INFO_LIMIT must be positive integer");
+			for (int i = 0; i < std::min(THUOSU_BEATMAP_INFO_LIMIT, beatmap_count); ++i)
+#else
 			while (beatmap_count--)
+#endif
 			{
 				info_list.push_back(InfoType{});
-				auto & i = info_list.back();
+				auto & info = info_list.back();
 
 				using namespace accessor;
 
-				get_artist_romanized(reader, i);
-				get_artist(reader, i);
-				get_title_romanized(reader, i);
-				get_title(reader, i);
-				get_creator(reader, i);
-				get_difficulty(reader, i);
-				get_music_file(reader, i);
-				get_beatmap_md5(reader, i);
-				get_beatmap_file(reader, i);
-				get_rank_status(reader, i);
-				get_circle_count(reader, i);
-				get_slider_count(reader, i);
-				get_spinner_count(reader, i);
-				get_last_edit_time(reader, i);
-				get_ar(reader, i);
-				get_cs(reader, i);
-				get_hp(reader, i);
-				get_od(reader, i);
-				get_slider_velocity(reader, i);
+				get_artist_romanized(reader, info);
+				get_artist(reader, info);
+				get_title_romanized(reader, info);
+				get_title(reader, info);
+				get_creator(reader, info);
+				get_difficulty(reader, info);
+				get_music_file(reader, info);
+				get_beatmap_md5(reader, info);
+				get_beatmap_file(reader, info);
+				get_rank_status(reader, info);
+				get_circle_count(reader, info);
+				get_slider_count(reader, info);
+				get_spinner_count(reader, info);
+				get_last_edit_time(reader, info);
+				get_ar(reader, info);
+				get_cs(reader, info);
+				get_hp(reader, info);
+				get_od(reader, info);
+				get_slider_velocity(reader, info);
 
 				// unknown block
 				for (int k = 0; k < 4; ++k)
@@ -275,9 +280,9 @@ namespace thuosu
 					}
 				}
 
-				get_drain_time(reader, i);
-				get_total_time(reader, i);
-				get_preview_time(reader, i);
+				get_drain_time(reader, info);
+				get_total_time(reader, info);
+				get_preview_time(reader, info);
 
 				// time point block
 				int time_point_count = reader.read<int32_t>();
@@ -286,31 +291,39 @@ namespace thuosu
 				while (time_point_count--)
 					reader.ignore(8 + 8 + 1);  // [beat length | rate] + offset + is red line
 
-				get_beatmap_id(reader, i);
-				get_beatmap_set_id(reader, i);
-				get_beatmap_thread_id(reader, i);
+				get_beatmap_id(reader, info);
+				get_beatmap_set_id(reader, info);
+				get_beatmap_thread_id(reader, info);
 				reader.ignore(4); // ??
-				get_user_offset(reader, i);
-				get_stack_leniency(reader, i);
-				get_play_mode(reader, i);
-				get_source(reader, i);
-				get_tags(reader, i);
-				get_online_offset(reader, i);
-				get_title_with_font(reader, i);
+				get_user_offset(reader, info);
+				get_stack_leniency(reader, info);
+				get_play_mode(reader, info);
+				get_source(reader, info);
+				get_tags(reader, info);
+				get_online_offset(reader, info);
+				get_title_with_font(reader, info);
 				reader.ignore(1 + 8 + 1);
-				get_location(reader, i);
+				get_location(reader, info);
 				reader.ignore(8 + 5 + 4 + 1);
 			}
 			if (assign_romanized)
 			{
 				using namespace accessor;
-				for (auto & i : info_list)
+				for (auto & info : info_list)
 				{
-					assign_artist(i);
-					assign_title(i);
+					assign_artist(info);
+					assign_title(info);
 				}
 			}
 			return info_list;
+		}
+
+		//!\brief convert .Net ticks to time_t (ignore subsecond duration)
+		//! only works on platforms on which time_t is corresponding to POSIX time with Unix Epoch
+		std::time_t ticks_to_time_t(std::int64_t ticks)
+		{
+			const std::uint64_t unix_epoch = 0x089f7ff5f7b58000uL;
+			return (time_t)((ticks - unix_epoch) / 10000000);
 		}
 	}
 }

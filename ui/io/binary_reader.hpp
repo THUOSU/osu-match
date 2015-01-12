@@ -24,7 +24,11 @@ namespace thuosu
 	namespace io
 	{
 		//! \brief utf-8 string <-> wstring converter
-		static std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_w_converter{};
+		inline std::wstring_convert<std::codecvt_utf8<wchar_t>> & utf8_w_converter()
+		{
+			static std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_w_converter{};
+			return utf8_w_converter;
+		}
 
 		template <typename InStream>
 		struct binary_reader final
@@ -59,7 +63,7 @@ namespace thuosu
 							m_buf.reset(new char[m_buf_size]);
 						}
 						m_pIn->read(m_buf.get(), length);
-						value = utf8_w_converter.from_bytes(m_buf.get(), m_buf.get() + length);
+						value = utf8_w_converter().from_bytes(m_buf.get(), m_buf.get() + length);
 					}
 				}
 				return *this;

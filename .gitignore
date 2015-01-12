@@ -5,3 +5,6 @@
 
 # test bench
 test.m
+*.sdf
+*.suo
+*.opensdf

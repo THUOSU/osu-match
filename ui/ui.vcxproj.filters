@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="io\beatmap_info.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="io\binary_reader.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="config.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="map_info.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="match_dialog.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_resources.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="settings.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="main_form.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="io\type_traits.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="headers">
+      <UniqueIdentifier>{33593e56-4fc9-41f9-8138-8c55382cc19c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources">
+      <UniqueIdentifier>{8d5ad154-2d5b-479b-b94d-431284cfae65}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="match_dialog.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="shared_resources.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="main_form.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="lang" />
+    <Text Include="settings.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+</Project>
