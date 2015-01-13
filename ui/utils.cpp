@@ -31,16 +31,20 @@ namespace thuosu
 		return path.parent_path();
 	}
 
-	path executable_filename()
+	const path & executable_filename()
 	{
-		wchar_t buf[FILENAME_MAX + 1];
-		GetModuleFileNameW(0, buf, FILENAME_MAX + 1);
-		return path{ buf };
+		static path exe_file = [](){
+			wchar_t buf[FILENAME_MAX + 1];
+			GetModuleFileNameW(0, buf, FILENAME_MAX + 1);
+			return path{ buf };
+		}();
+		return exe_file;
 	}
 
-	path executable_directory()
+	const path & executable_directory()
 	{
-		return executable_filename().parent_path();
+		static path exe_dir = executable_filename().parent_path();
+		return exe_dir;
 	}
 
 	performance_timer::performance_timer()

@@ -57,9 +57,9 @@ namespace thuosu
 		return ltrim(rtrim(s, c), c);
 	}
 
-	filesystem::path executable_filename();
+	const filesystem::path & executable_filename();
 
-	filesystem::path executable_directory();
+	const filesystem::path & executable_directory();
 
 	//!\brief try find osu path (through registry on windows)
 	filesystem::path find_osu_path();
