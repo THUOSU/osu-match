@@ -15,9 +15,9 @@ namespace thuosu
 
 		using path = sys::wpath;
 		using sys::filesystem_error;
-		using sys::directory_entry;
-		using sys::directory_iterator;
-		using sys::recursive_directory_iterator;
+		using directory_entry = sys::wdirectory_entry;
+		using directory_iterator = sys::wdirectory_iterator;
+		using recursive_directory_iterator = sys::wrecursive_directory_iterator;
 		// missing perms
 		using sys::file_status;
 		using sys::space_info;
@@ -35,6 +35,7 @@ namespace thuosu
 		using sys::create_symlink;
 		// missing create_directory_symlink;
 		inline path current_path() { return sys::current_path<path>(); }
+		inline void current_path(const path & p) { sys::current_path(p); }
 		using sys::exists;
 		using sys::equivalent;
 		using sys::file_size;
