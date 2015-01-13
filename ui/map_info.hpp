@@ -7,22 +7,29 @@
 #include <cwctype>
 
 #include "filesystem.hpp"
+#include "matcher.hpp"
 
 namespace thuosu
 {
 	struct map_info
 	{
+		static filesystem::path osu_dir;
+
 		std::wstring artist, artist_romanized, title, title_romanized, source;
 		filesystem::path location, music_file;
 		std::vector<std::wstring> tags;
-		bool matched;
+		
+		bool matched() const
+		{
+			return has_matched(osu_dir / location / music_file);
+		}
 
 		filesystem::path full_path() const
 		{
 			return location / music_file;
 		}
 
-		bool match(const std::wstring & key) const
+		bool match_key(const std::wstring & key) const
 		{
 			if (is_sub(artist, key)
 				|| is_sub(artist_romanized, key)
@@ -58,6 +65,8 @@ namespace thuosu
 	{
 		info.music_file = reader.read<std::wstring>();
 	}
+	
+	filesystem::path map_info::osu_dir;
 }
 
 #endif
