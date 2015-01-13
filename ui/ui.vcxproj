@@ -160,6 +160,7 @@
     <ClInclude Include="io\binary_reader.hpp" />
     <ClInclude Include="io\type_traits.hpp" />
     <ClInclude Include="map_info.hpp" />
+    <ClInclude Include="matcher.hpp" />
     <ClInclude Include="match_dialog.hpp" />
     <ClInclude Include="main_form.hpp" />
     <ClInclude Include="resource.h" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matcher.cpp" />
     <ClCompile Include="match_dialog.cpp" />
     <ClCompile Include="main_form.cpp" />
     <ClCompile Include="settings.cpp" />
@@ -180,10 +182,10 @@
     <Text Include="settings.ini" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\icon.ico" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,11 +5,14 @@
 
 namespace thuosu
 {
-	bool has_matched(const filesystem::path & music_file);
+	namespace matcher
+	{
+		bool has_matched(const filesystem::path & music_file);
 
-	void match_music(const filesystem::path & src, const filesystem::path & dst);
+		void match_music(const filesystem::path & src, const filesystem::path & dst);
 
-	void recovery(const filesystem::path & music_file);
+		void recovery(const filesystem::path & music_file);
+	}
 }
 
 #endif // THUOSU_MATCHER_HPP

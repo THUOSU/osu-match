@@ -7,7 +7,6 @@
 #include <cwctype>
 
 #include "filesystem.hpp"
-#include "matcher.hpp"
 
 namespace thuosu
 {
@@ -18,15 +17,16 @@ namespace thuosu
 		std::wstring artist, artist_romanized, title, title_romanized, source;
 		filesystem::path location, music_file;
 		std::vector<std::wstring> tags;
-		
-		bool matched() const
+		bool matched;
+
+		filesystem::path relative_path() const
 		{
-			return has_matched(osu_dir / location / music_file);
+			return location / music_file;
 		}
 
 		filesystem::path full_path() const
 		{
-			return location / music_file;
+			return osu_dir / location / music_file;
 		}
 
 		bool match_key(const std::wstring & key) const
@@ -65,7 +65,7 @@ namespace thuosu
 	{
 		info.music_file = reader.read<std::wstring>();
 	}
-	
+
 	filesystem::path map_info::osu_dir;
 }
 

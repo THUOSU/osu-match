@@ -1,6 +1,6 @@
 #include "main_form.hpp"
 #include "config.hpp"
-//#define THUOSU_BEATMAP_INFO_LIMIT 1000
+#define THUOSU_BEATMAP_INFO_LIMIT 1000
 #include "io/beatmap_info.hpp"
 #include "map_info.hpp"
 #include "shared_resources.hpp"
@@ -36,18 +36,19 @@
 using namespace thuosu;
 using namespace std;
 using namespace nana;
+using map_info_ptr = shared_ptr < map_info >;
 
-inline nana::listbox::oresolver & operator << (nana::listbox::oresolver & ore, const thuosu::map_info & info)
+inline listbox::oresolver & operator << (listbox::oresolver & ore, const map_info_ptr & info)
 {
-	auto bg_color = info.matched() ? 0xaaffaa : 0xffffff;
-	for (const auto & str : { info.artist, info.title, wstring(info.full_path()) })
-		ore << nana::listbox::cell(str, bg_color, 0);
+	auto bg_color = info->matched ? 0xaaffaa : 0xffffff;
+	for (const auto & str : { info->artist, info->title, wstring(info->relative_path()) })
+		ore << listbox::cell(str, bg_color, 0);
 	return ore;
 }
 
 struct main_form::impl : nana::noncopyable, nana::nonmovable
 {
-	unordered_map<wstring, map_info> info_dict;
+	unordered_map<wstring, map_info_ptr> info_dict;
 	form fm;
 	listbox lst_songs;
 	label lbl_songs;
@@ -75,7 +76,7 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 
 		for (auto & kv : info_dict)
 		{
-			auto & value = kv.second;
+			const auto & value = kv.second;
 			auto & item = lst_songs.at(0).append(value);
 			item.value(value);
 		}
@@ -125,9 +126,12 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 			auto selected = lst_songs.selected();
 			if (selected.size() > 0)
 			{
-				const auto & info = lst_songs.at(0).at(selected.front().item).value<map_info>();
-				dialog.src_file(map_info::osu_dir / info.full_path());
+				auto item = lst_songs.at(0).at(selected.front().item);
+				const auto & info = item.value<map_info_ptr>();
+				dialog.src_file(info->full_path());
 				dialog.show_dialog(fm);
+				info->matched = matcher::has_matched(info->full_path());
+				item.resolve_from(info);
 			}
 		});
 		auto filter = bind(&impl::filter_maps, this);
@@ -153,10 +157,12 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 			performance_timer timer{};
 			for (auto & info : list)
 			{
-				const auto & full_path = info.full_path();
-				if (info_dict.find(full_path) == info_dict.end())
-					info_dict[full_path] = info;
+				const auto & p = info.relative_path();
+				if (info_dict.find(p) == info_dict.end())
+					info_dict[p] = make_shared<map_info>(info);
 			}
+			for (auto & kv : info_dict)
+				kv.second->matched = matcher::has_matched(kv.second->full_path());
 		}
 	}
 	
@@ -172,9 +178,9 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 			for (const auto & kv : info_dict)
 			{
 				auto & value = kv.second;
-				if (matched_only && !value.matched())
+				if (matched_only && !value->matched)
 					continue;
-				if (all_of(keys.begin(), keys.end(), [&value](const wstring& key){ return value.match_key(key); }))
+				if (all_of(keys.begin(), keys.end(), [&value](const wstring& key){ return value->match_key(key); }))
 				{
 					auto & item = lst_songs.at(0).append(value);
 					item.value(value);

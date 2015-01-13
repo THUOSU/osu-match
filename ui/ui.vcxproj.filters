@@ -10,7 +10,6 @@
     <ClInclude Include="config.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="map_info.hpp">
       <Filter>headers</Filter>
     </ClInclude>
@@ -35,6 +34,10 @@
     <ClInclude Include="io\type_traits.hpp">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="matcher.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="headers">
@@ -63,15 +66,18 @@
     <ClCompile Include="utils.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="matcher.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lang" />
     <Text Include="settings.ini" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
 </Project>

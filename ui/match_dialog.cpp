@@ -102,7 +102,7 @@ void match_dialog::show_dialog(const nana::form & parent)
 		(msgbox{ fm, L"info" } << L"partial implemented.").icon(msgbox::icon_information)();
 		try
 		{
-			match_music(_impl->src_file, txt_dst.caption());
+			matcher::match_music(_impl->src_file, txt_dst.caption());
 		}
 		catch (const std::exception & exc)
 		{
