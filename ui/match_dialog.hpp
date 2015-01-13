@@ -12,6 +12,8 @@
 #include <utility>
 #include <nana/gui/widgets/form.hpp>
 
+#include "filesystem.hpp"
+
 namespace thuosu
 {
 	class match_dialog final : nana::noncopyable, nana::nonmovable
@@ -22,8 +24,8 @@ namespace thuosu
 		match_dialog();
 		~match_dialog();
 
-		void src_file(const std::wstring & file);
-		const std::wstring & src_file() const;
+		void src_file(const filesystem::path & file);
+		const filesystem::path & src_file() const;
 
 		void show_dialog(const nana::form & parent);
 	};

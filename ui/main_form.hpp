@@ -20,7 +20,7 @@ namespace thuosu
 		struct impl;
 		std::unique_ptr<impl> _impl;
 	public:
-		main_form(const filesystem::path & osudb_path);
+		main_form(const filesystem::path & osu_dir_path);
 		~main_form();
 		
 		void show();

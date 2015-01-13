@@ -1,6 +1,9 @@
 #include "config.hpp"
 #include "shared_resources.hpp"
 #include "match_dialog.hpp"
+#include "matcher.hpp"
+
+#include <iostream>
 
 #include <nana/gui/place.hpp>
 #include <nana/gui/filebox.hpp>
@@ -17,7 +20,7 @@ using namespace nana;
 
 struct match_dialog::impl
 {
-	std::wstring src_file;
+	thuosu::filesystem::path src_file;
 };
 
 match_dialog::match_dialog()
@@ -27,12 +30,12 @@ match_dialog::match_dialog()
 match_dialog::~match_dialog()
 { }
 
-void match_dialog::src_file(const std::wstring & file)
+void match_dialog::src_file(const thuosu::filesystem::path & file)
 {
 	_impl->src_file = file;
 }
 
-const std::wstring & match_dialog::src_file() const
+const thuosu::filesystem::path & match_dialog::src_file() const
 {
 	return _impl->src_file;
 }
@@ -96,8 +99,15 @@ void match_dialog::show_dialog(const nana::form & parent)
 	btn_ok.i18n("Ok");
 	btn_ok.background(bg_color);
 	btn_ok.events().click([&](){
-		(msgbox{ fm, L"error" } << L"not implemented.").icon(msgbox::icon_information)();
-		// TO-DO
+		(msgbox{ fm, L"info" } << L"partial implemented.").icon(msgbox::icon_information)();
+		try
+		{
+			match_music(_impl->src_file, txt_dst.caption());
+		}
+		catch (const std::exception & exc)
+		{
+			std::cout << exc.what() << std::endl;
+		}
 	});
 
 	btn_cancel.i18n("Cancel");

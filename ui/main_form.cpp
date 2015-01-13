@@ -1,11 +1,13 @@
 #include "main_form.hpp"
 #include "config.hpp"
-#define THUOSU_BEATMAP_INFO_LIMIT 1000
+//#define THUOSU_BEATMAP_INFO_LIMIT 1000
 #include "io/beatmap_info.hpp"
 #include "map_info.hpp"
 #include "shared_resources.hpp"
 #include "utils.hpp"
+#include "settings.hpp"
 #include "match_dialog.hpp"
+#include "matcher.hpp"
 
 #include <iostream>
 #include <locale>
@@ -37,7 +39,7 @@ using namespace nana;
 
 inline nana::listbox::oresolver & operator << (nana::listbox::oresolver & ore, const thuosu::map_info & info)
 {
-	auto bg_color = info.matched ? 0xaaffaa : 0xffffff;
+	auto bg_color = info.matched() ? 0xaaffaa : 0xffffff;
 	for (const auto & str : { info.artist, info.title, wstring(info.full_path()) })
 		ore << nana::listbox::cell(str, bg_color, 0);
 	return ore;
@@ -60,24 +62,25 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 		return API::make_center(size.width / 2, size.height / 2);
 	}
 
-	impl(const filesystem::path & osudb_path)
+	impl(const filesystem::path & osu_dir_path)
 		: fm{ init_rect() },
 		lst_songs{ fm }, lbl_songs{ fm }, txt_search{ fm }, btn_search{ fm }, chk_matched{ fm },
 		pl{ fm }
 	{
-		load_osu_db(osudb_path);
+		map_info::osu_dir = osu_dir_path;
+		load_osu_db(osu_dir_path / filesystem::path{ L"osu!.db" });
+		
 		initialize_widgets();
 		register_event_handlers();
-		
-		////////////////////////// for test! ////////////////////////
-		srand(static_cast<unsigned int>(time(nullptr)));
+
 		for (auto & kv : info_dict)
 		{
 			auto & value = kv.second;
-			value.matched = rand() % 10 == 0;
 			auto & item = lst_songs.at(0).append(value);
 			item.value(value);
 		}
+		
+		global_settings()[L"dir"] = osu_dir_path;
 	}
 	
 	void initialize_widgets()
@@ -123,8 +126,7 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 			if (selected.size() > 0)
 			{
 				const auto & info = lst_songs.at(0).at(selected.front().item).value<map_info>();
-				dialog.src_file(info.full_path());
-				wcout << dialog.src_file() << endl;
+				dialog.src_file(map_info::osu_dir / info.full_path());
 				dialog.show_dialog(fm);
 			}
 		});
@@ -170,9 +172,9 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 			for (const auto & kv : info_dict)
 			{
 				auto & value = kv.second;
-				if (matched_only && !value.matched)
+				if (matched_only && !value.matched())
 					continue;
-				if (all_of(keys.begin(), keys.end(), [&value](const wstring& key){ return value.match(key); }))
+				if (all_of(keys.begin(), keys.end(), [&value](const wstring& key){ return value.match_key(key); }))
 				{
 					auto & item = lst_songs.at(0).append(value);
 					item.value(value);
@@ -188,8 +190,8 @@ struct main_form::impl : nana::noncopyable, nana::nonmovable
 	}
 };
 
-main_form::main_form(const filesystem::path & osudb_path)
-	: _impl{ new main_form::impl{ osudb_path } }
+main_form::main_form(const filesystem::path & osu_dir_path)
+	: _impl{ new main_form::impl{ osu_dir_path } }
 { }
 
 main_form::~main_form()

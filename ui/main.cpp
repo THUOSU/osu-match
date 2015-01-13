@@ -30,7 +30,7 @@ void load_i18n()
 	for (const auto & kv : default_i18n)
 		i18n.set(kv.first, kv.second);
 
-	auto lang_file = executable_directory() / path{ L"lang" };
+	auto lang_file = executable_directory() / L"lang";
 	if (is_regular_file(lang_file))
 	{
 		wstring_convert<codecvt_utf8<wchar_t>> converter{};
@@ -91,7 +91,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 					fb.title(i18n("please_select_osu"));
 					if (!fb())
 						return 0;
-					if (!is_regular_file(osu_path / path{ L"osu!.db" }))
+					if (!is_regular_file(osu_path / L"osu!.db"))
 					{
 						(nana::msgbox{ i18n("form_title") } << i18n("db_not_found"))();
 						return 0;
@@ -99,11 +99,9 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 				}
 			}
 		}
-		main_form fm{ osu_path / path{ L"osu!.db" } };
+		main_form fm{ osu_path };
 		fm.show();
 		nana::exec();
-
-		global_settings()[L"dir"] = osu_path;
 	}
 	catch (const std::exception & exc)
 	{
