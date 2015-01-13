@@ -33,7 +33,7 @@ namespace thuosu
 		template <typename InStream>
 		struct binary_reader final
 		{
-			binary_reader(InStream & in) : m_pIn{ &in } {}
+			binary_reader(InStream & in) : m_pIn{ std::addressof(in) } {}
 
 			template <typename T>
 			typename std::enable_if<std::is_arithmetic<T>::value, binary_reader &>::type operator >> (T & value)
