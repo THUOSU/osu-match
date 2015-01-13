@@ -60,6 +60,24 @@ namespace thuosu
 		using sys::operator<<;
 		using sys::operator>>;
 		// missing u8path;
+
+		inline void rename(const path & old_path, const path & new_path)
+		{
+			auto code = sys::_Rename(old_path.string().c_str(), new_path.string().c_str());
+			if (code != 0)
+				throw filesystem_error{ "cannot rename file." };
+		}
+
+
+		using sys::remove;
+		using sys::remove_all;
+		using sys::remove_directory;
+		using sys::remove_filename;
+
+		inline path operator / (const path & p1, const path::string_type & p2)
+		{
+			return p1 / path{ p2 };
+		}
 	}
 }
 
