@@ -11,7 +11,7 @@ namespace thuosu
 
 		void match_music(const filesystem::path & src, const filesystem::path & dst);
 
-		void recovery(const filesystem::path & music_file);
+		void recover(const filesystem::path & music_file);
 	}
 }
 

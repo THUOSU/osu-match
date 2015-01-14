@@ -27,7 +27,11 @@ void load_i18n()
 		{ "select_osu", L"Please select osu!.exe" },
 		{ "form_title", L"osu! Matcher" },
 		{ "db_not_found", L"osu!.db not found" },
-		{ "already_running", L"osu! Matcher is already running!" }
+		{ "already_running", L"osu! Matcher is already running!" },
+		{ "match_succeeded", L"Match succeed" },
+		{ "match_failed", L"Match failed" },
+		{ "recover_succeeded", L"Recover succeeded" },
+		{ "recover_failed", L"Recover failed" }
 	};
 	for (const auto & kv : default_i18n)
 		i18n.set(kv.first, kv.second);

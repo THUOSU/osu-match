@@ -49,7 +49,7 @@ void match_dialog::show_dialog(const nana::form & parent)
 {
 	static internationalization i18n{};
 	color_t bg_color = make_rgb(240, 240, 240);
-	form fm{ parent.handle(), API::make_center(parent.handle(), 560, 200), appearance{ true, true, true, true, false, false, false } };
+	form fm{ (nana::window)parent, API::make_center(parent.handle(), 560, 200), appearance{ true, true, true, true, false, false, false } };
 	fm.icon(main_icon());
 	fm.caption(i18n("Match") + L"...");
 
@@ -62,7 +62,7 @@ void match_dialog::show_dialog(const nana::form & parent)
 	
 	label lbl_src{ fm }, lbl_dst{ fm };
 	textbox txt_src{ fm }, txt_dst{ fm };
-	button btn_dst{ fm }, btn_ok{ fm }, btn_cancel{ fm };
+	button btn_dst{ fm }, btn_recover{ fm }, btn_match{ fm }, btn_close{ fm };
 	progress prg{ fm };
 	lbl_src.caption(i18n("Source file") + L": ");
 	lbl_src.background(bg_color);
@@ -92,27 +92,46 @@ void match_dialog::show_dialog(const nana::form & parent)
 		{
 			txt_dst.caption(fb.file());
 			init_path = fb.path();
-			btn_ok.enabled(true);
 		}
 	});
 
-	btn_ok.i18n("Ok");
-	btn_ok.background(bg_color);
-	btn_ok.events().click([&](){
-		(msgbox{ fm, L"info" } << L"partial implemented.").icon(msgbox::icon_information)();
+	btn_recover.i18n("Recover");
+	btn_recover.background(bg_color);
+	btn_recover.enabled(matcher::has_matched(_impl->src_file));
+	btn_recover.events().click([&](){
+		try
+		{
+			matcher::recover(_impl->src_file);
+			btn_recover.enabled(false);
+			(msgbox{ fm, i18n("info") } << i18n("recover_succeeded"))();
+		}
+		catch (std::exception & exc)
+		{
+			std::cout << exc.what() << std::endl;
+			(msgbox{ fm, i18n("info") } << i18n("recover_failed"))();
+		}
+	});
+
+	btn_match.i18n("Match");
+	btn_match.background(bg_color);
+	btn_match.events().click([&](){
+		(msgbox{ fm, L"info" } << L"Not implemented. (copy file only)").icon(msgbox::icon_information)();
 		try
 		{
 			matcher::match_music(_impl->src_file, txt_dst.caption());
+			btn_recover.enabled(matcher::has_matched(_impl->src_file));
+			(msgbox{ fm, i18n("info") } << i18n("match_succeeded"))();
 		}
 		catch (const std::exception & exc)
 		{
 			std::cout << exc.what() << std::endl;
+			(msgbox{ fm, i18n("info") } << i18n("match_failed"))();
 		}
 	});
 
-	btn_cancel.i18n("Cancel");
-	btn_cancel.background(bg_color);
-	btn_cancel.events().click([&](){
+	btn_close.i18n("Close");
+	btn_close.background(bg_color);
+	btn_close.events().click([&](){
 		fm.close();
 	});
 
@@ -131,14 +150,14 @@ void match_dialog::show_dialog(const nana::form & parent)
 		"<weight=20>"
 		"<prg weight=10>"
 		"<weight=20>"
-		"<weight=30 <><ok weight=100><weight=20><cancel weight=100>>"
+		"<weight=30 <btns margin=[0, 0, 0, 150] arrange=[100, 100, 100] gap=20>>"
 		);
 	pl["src"] << lbl_src << txt_src;
 	pl["dst"] << lbl_dst << txt_dst << btn_dst;
 	pl["prg"] << prg;
-	pl["ok"] << btn_ok;
-	pl["cancel"] << btn_cancel;
+	pl["btns"] << btn_recover << btn_match << btn_close;
 	pl.field_visible("prg", false);
 	pl.collocate();
+	std::cout << (fm.parent() == parent) << std::endl;
 	API::modal_window(fm);
 }

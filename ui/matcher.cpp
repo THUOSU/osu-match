@@ -32,7 +32,7 @@ namespace thuosu
 			copy_file(dst, src, copy_option::overwrite_if_exists);
 		}
 
-		void recovery(const path & music_file)
+		void recover(const path & music_file)
 		{
 			path mbak_file{ music_file };
 			mbak_file.replace_extension(mbak_file.extension() + L".mbak");
