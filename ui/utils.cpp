@@ -7,6 +7,7 @@
 #if THUOSU_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shellapi.h>
 
 using namespace std;
 namespace thuosu
@@ -84,6 +85,25 @@ namespace thuosu
 		QueryPerformanceCounter(&i);
 		QueryPerformanceFrequency(&f);
 		std::cout << "performance: " << static_cast<double>(i.QuadPart - this->tick) / f.QuadPart * 1000 << " ms" << std::endl;
+	}
+
+	int execute(const std::wstring & command, const std::wstring & param)
+	{
+		DWORD exitCode;
+		SHELLEXECUTEINFOW ShExecInfo = { 0 };
+		ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
+		ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+		ShExecInfo.hwnd = NULL;
+		ShExecInfo.lpVerb = NULL;
+		ShExecInfo.lpFile = command.c_str();        
+		ShExecInfo.lpParameters = param.c_str();   
+		ShExecInfo.lpDirectory = NULL;
+		ShExecInfo.nShow = SW_HIDE;
+		ShExecInfo.hInstApp = NULL; 
+		ShellExecuteExW(&ShExecInfo);
+		WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+		GetExitCodeProcess(ShExecInfo.hProcess, &exitCode);
+		return static_cast<int>(exitCode);
 	}
 }
 

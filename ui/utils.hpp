@@ -73,5 +73,7 @@ namespace thuosu
 	private:
 		std::int64_t tick;
 	};
+
+	int execute(const std::wstring & command, const std::wstring & param = L"");
 }
 #endif // THUOSU_MATCH_UTILS

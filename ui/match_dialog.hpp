@@ -27,7 +27,7 @@ namespace thuosu
 		void src_file(const filesystem::path & file);
 		const filesystem::path & src_file() const;
 
-		void show_dialog(const nana::form & parent);
+		void show_dialog(nana::form & parent);
 	};
 }
 

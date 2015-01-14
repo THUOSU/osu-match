@@ -45,11 +45,11 @@ const thuosu::filesystem::path & match_dialog::src_file() const
 #include <windows.h>
 #endif
 
-void match_dialog::show_dialog(const nana::form & parent)
+void match_dialog::show_dialog(nana::form & parent)
 {
 	static internationalization i18n{};
 	color_t bg_color = make_rgb(240, 240, 240);
-	form fm{ (nana::window)parent, API::make_center(parent.handle(), 560, 200), appearance{ true, true, true, true, false, false, false } };
+	form fm{ (nana::window)parent, API::make_center(parent.handle(), 560, 200), appearance{ true, true, false, true, false, false, false } };
 	fm.icon(main_icon());
 	fm.caption(i18n("Match") + L"...");
 
@@ -115,7 +115,6 @@ void match_dialog::show_dialog(const nana::form & parent)
 	btn_match.i18n("Match");
 	btn_match.background(bg_color);
 	btn_match.events().click([&](){
-		(msgbox{ fm, L"info" } << L"Not implemented. (copy file only)").icon(msgbox::icon_information)();
 		try
 		{
 			matcher::match_music(_impl->src_file, txt_dst.caption());
@@ -125,7 +124,7 @@ void match_dialog::show_dialog(const nana::form & parent)
 		catch (const std::exception & exc)
 		{
 			std::cout << exc.what() << std::endl;
-			(msgbox{ fm, i18n("info") } << i18n("match_failed"))();
+			(msgbox{ fm, i18n("info") } << i18n("match_failed: ") << nana::charset{ exc.what() })();
 		}
 	});
 
@@ -158,6 +157,5 @@ void match_dialog::show_dialog(const nana::form & parent)
 	pl["btns"] << btn_recover << btn_match << btn_close;
 	pl.field_visible("prg", false);
 	pl.collocate();
-	std::cout << (fm.parent() == parent) << std::endl;
 	API::modal_window(fm);
 }
