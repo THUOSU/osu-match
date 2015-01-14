@@ -47,6 +47,30 @@ namespace thuosu
 		return exe_dir;
 	}
 
+	bool ensure_single_instance()
+	{
+		struct single_instance_guard
+		{
+			HANDLE h_mutex = 0;
+			bool is_single = false;
+			single_instance_guard()
+			{
+				auto uuid = L"356540b6-9bc6-11e4-811f-a4db30289c9b";
+				HANDLE handle = CreateMutexExW(NULL, uuid, 0, MUTEX_ALL_ACCESS);
+				is_single = (GetLastError() != ERROR_ALREADY_EXISTS);
+			}
+			single_instance_guard(const single_instance_guard&) = delete;
+			single_instance_guard & operator= (const single_instance_guard&) = delete;
+			~single_instance_guard()
+			{
+				if (h_mutex)
+					CloseHandle(h_mutex);
+			}
+		};
+		static single_instance_guard guard{};
+		return guard.is_single;
+	}
+
 	performance_timer::performance_timer()
 	{
 		LARGE_INTEGER i;
@@ -60,7 +84,7 @@ namespace thuosu
 		QueryPerformanceCounter(&i);
 		QueryPerformanceFrequency(&f);
 		std::cout << "performance: " << static_cast<double>(i.QuadPart - this->tick) / f.QuadPart * 1000 << " ms" << std::endl;
-}
+	}
 }
 
 #else

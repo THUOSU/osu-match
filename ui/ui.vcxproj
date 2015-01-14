@@ -178,10 +178,6 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="lang" />
-    <Text Include="settings.ini" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>

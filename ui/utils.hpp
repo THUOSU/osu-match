@@ -64,6 +64,8 @@ namespace thuosu
 	//!\brief try find osu path (through registry on windows)
 	filesystem::path find_osu_path();
 
+	bool ensure_single_instance();
+
 	struct performance_timer
 	{
 		performance_timer();

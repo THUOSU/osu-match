@@ -23,9 +23,11 @@ void load_i18n()
 	using namespace thuosu;
 	using namespace filesystem;
 	vector<pair<string, wstring>> default_i18n{
-		{ "please_select_osu", L"Please select osu!.exe" },
+		{ "info", L"Information" },
+		{ "select_osu", L"Please select osu!.exe" },
 		{ "form_title", L"osu! Matcher" },
-		{ "db_not_found", L"osu!.db not found" }
+		{ "db_not_found", L"osu!.db not found" },
+		{ "already_running", L"osu! Matcher is already running!" }
 	};
 	for (const auto & kv : default_i18n)
 		i18n.set(kv.first, kv.second);
@@ -74,11 +76,17 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 	using namespace filesystem;
 
 	std::locale::global(std::locale{ "" });
+	
+	load_i18n();
+
+	if (!ensure_single_instance())
+	{
+		(nana::msgbox{ i18n("info") } << i18n("already_running"))();
+		return 0;
+	}
 
 	try
 	{
-		load_i18n();
-
 		auto osu_path = find_osu_path();
 		if (osu_path.empty())
 		{
@@ -88,7 +96,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 				{
 					nana::filebox fb{ nullptr, true };
 					fb.add_filter(L"*.exe", L"*.exe");
-					fb.title(i18n("please_select_osu"));
+					fb.title(i18n("select_osu"));
 					if (!fb())
 						return 0;
 					if (!is_regular_file(osu_path / L"osu!.db"))
