@@ -38,6 +38,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="messagebox.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="headers">
@@ -67,6 +70,9 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="matcher.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="messagebox.cpp">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

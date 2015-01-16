@@ -163,6 +163,7 @@
     <ClInclude Include="matcher.hpp" />
     <ClInclude Include="match_dialog.hpp" />
     <ClInclude Include="main_form.hpp" />
+    <ClInclude Include="messagebox.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.hpp" />
     <ClInclude Include="shared_resources.hpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="matcher.cpp" />
     <ClCompile Include="match_dialog.cpp" />
     <ClCompile Include="main_form.cpp" />
+    <ClCompile Include="messagebox.cpp" />
     <ClCompile Include="settings.cpp" />
     <ClCompile Include="shared_resources.cpp" />
     <ClCompile Include="utils.cpp" />

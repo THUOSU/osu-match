@@ -2,6 +2,7 @@
 #include "shared_resources.hpp"
 #include "match_dialog.hpp"
 #include "matcher.hpp"
+#include "messagebox.hpp"
 
 #include <iostream>
 
@@ -103,12 +104,15 @@ void match_dialog::show_dialog(nana::form & parent)
 		{
 			matcher::recover(_impl->src_file);
 			btn_recover.enabled(false);
-			(msgbox{ fm, i18n("info") } << i18n("recover_succeeded"))();
+			show_msgbox(fm, i18n("recover_succeeded"), i18n("info"));
+			//(msgbox{ fm, i18n("info") } << i18n("recover_succeeded"))();
+
 		}
 		catch (std::exception & exc)
 		{
 			std::cout << exc.what() << std::endl;
-			(msgbox{ fm, i18n("info") } << i18n("recover_failed"))();
+			show_msgbox(fm, i18n("recover_failed"), i18n("info"));
+			//(msgbox{ fm, i18n("info") } << i18n("recover_failed"))();
 		}
 	});
 
@@ -119,12 +123,14 @@ void match_dialog::show_dialog(nana::form & parent)
 		{
 			matcher::match_music(_impl->src_file, txt_dst.caption());
 			btn_recover.enabled(matcher::has_matched(_impl->src_file));
-			(msgbox{ fm, i18n("info") } << i18n("match_succeeded"))();
+			show_msgbox(fm, i18n("match_succeeded"), i18n("info"));
+			//(msgbox{ fm, i18n("info") } << i18n("match_succeeded"))();
 		}
 		catch (const std::exception & exc)
 		{
 			std::cout << exc.what() << std::endl;
-			(msgbox{ fm, i18n("info") } << i18n("match_failed: ") << nana::charset{ exc.what() })();
+			show_msgbox(fm, i18n("match_failed") + L": " + static_cast<nana::string>(nana::charset{ exc.what() }), i18n("info"));
+			//(msgbox{ fm, i18n("info") } << i18n("match_failed: ") << nana::charset{ exc.what() })();
 		}
 	});
 
